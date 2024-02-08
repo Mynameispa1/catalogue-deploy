@@ -1,56 +1,47 @@
 pipeline {
     agent {
-    node {
-        label 'Agent-1'
+        node {
+            label 'AGENT-1'
         }
     }
-
-    //   environment { 
+    // environment { 
     //     packageVersion = ''
-    //     nexusURL = '172.31.84.200:8081'
+    //     nexusURL = '172.31.5.95:8081'
     // }
-
-     options {
+    options {
         timeout(time: 1, unit: 'HOURS')
-        disableConcurrentBuilds()       //to run only one build at a time
+        disableConcurrentBuilds()
+        ansiColor('xterm')
     }
-
     parameters {
-        string(name: 'version', defaultValue: '1.2.0', description: 'What is the artifacts version')
-        string(name: 'environment', defaultValue: 'dev', description: 'What is the environment')
-
-        // text(name: 'BIOGRAPHY', defaultValue: '', description: 'Enter some information about the person')
-
-        // booleanParam(name: 'TOGGLE', defaultValue: true, description: 'Toggle this value')
-
-        // choice(name: 'CHOICE', choices: ['One', 'Two', 'Three'], description: 'Pick something')
-
-        // password(name: 'PASSWORD', defaultValue: 'SECRET', description: 'Enter a password')
+        string(name: 'version', defaultValue: '', description: 'What is the artifact version?')
+        string(name: 'environment', defaultValue: 'dev', description: 'What is environment?')
+        booleanParam(name: 'Destroy', defaultValue: 'false', description: 'What is Destroy?')
+        booleanParam(name: 'Create', defaultValue: 'false', description: 'What is Create?')
     }
-  // Build stage
-     stages {
+    // build
+    stages {
         stage('Print version') {
             steps {
                 sh """
-                   echo "version is: ${params.version}"
-                   echo "environment is: ${params.environment}"
+                    echo "version: ${params.version}"
+                    echo "environment: ${params.environment}"
                 """
             }
         }
-
-    //post build
+        
+     }
+    // post build
     post { 
         always { 
             echo 'I will always say Hello again!'
             deleteDir()
         }
-
         failure { 
-            echo 'This is Failed...!'
+            echo 'this runs when pipeline is failed, used generally to send some alerts'
         }
-
-        success {
-            echo 'This is success...!'
+        success{
+            echo 'I will say Hello when pipeline is success'
         }
     }
-}     
+}
