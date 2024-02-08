@@ -53,7 +53,7 @@ pipeline {
             echo 'This is success...!'
         }
     }
-}    
-}
+}     
+
 
    
